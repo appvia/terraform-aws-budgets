@@ -1,0 +1,23 @@
+---
+name: Terraform
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - vnext
+
+jobs:
+  budgets-module-validation:
+    uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
+    name: Cloud Access Module Validation
+    with:
+      working-directory: modules/budgets
+
+  team=budgets-module-validation:
+    uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
+    name: Team Budgets Module Validation
+    with:
+      working-directory: modules/team-budgets
