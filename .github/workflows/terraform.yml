@@ -16,7 +16,7 @@ jobs:
     with:
       working-directory: modules/budgets
 
-  team=budgets-module-validation:
+  team-budgets-module-validation:
     uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
     name: Team Budgets Module Validation
     with:
