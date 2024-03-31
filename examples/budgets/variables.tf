@@ -1,17 +1,20 @@
-#
-## Related to the inputs to the module 
-#
 
-variable "sns_topic_name" {
-  description = "The name of the SNS topic to create for budget notifications"
-  type        = string
-  default     = "budget-notifications"
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 }
 
-variable "create_sns_topic" {
-  description = "A flag to determine if the SNS topic should be created"
-  type        = bool
-  default     = true
+variable "notification_emails" {
+  description = "A list of email addresses to notify when a budget exceeds its threshold"
+  type        = list(string)
+  default     = []
+}
+
+variable "notification_secret_name" {
+  description = "The name of the secret containing the email address to notify when a budget exceeds its threshold"
+  type        = string
+  default     = "notification/secret"
 }
 
 variable "budgets" {
@@ -66,25 +69,3 @@ variable "budgets" {
   default = []
 }
 
-variable "notification" {
-  description = "The configuration as to how the budget notifications should be sent"
-  type = object({
-    email = optional(object({
-      addresses = list(string)
-    }), null)
-    slack = optional(object({
-      channel     = string
-      lambda_name = optional(string, "budget-notifications")
-      webhook_url = string
-    }), null)
-    teams = optional(object({
-      webhook_url = string
-    }), null)
-  })
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}

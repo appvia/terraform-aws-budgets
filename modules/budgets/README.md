@@ -1,3 +1,92 @@
+![Github Actions](../../actions/workflows/terraform.yml/badge.svg)
+
+# Terraform AWS Budgets Modules
+
+## Description
+
+This purpose of the module is to provide a wrapper to the configuration of AWS Budgets, globally and team budgets, along with a notification optional
+
+## Usage
+
+Add example usage here
+
+```hcl
+locals {
+  budgets = [
+    {
+      name         = "AWS Savings Plan Coverage Budget"
+      budget_type  = "SAVINGS_PLANS_COVERAGE"
+      limit_amount = "100.0"
+      limit_unit   = "PERCENTAGE"
+      time_unit    = "MONTHLY"
+
+      notification = {
+        comparison_operator = "LESS_THAN"
+        threshold           = "100"
+        threshold_type      = "PERCENTAGE"
+        notification_type   = "ACTUAL"
+      }
+    },
+    {
+      name         = "AWS Savings Plan Utilization Budget"
+      budget_type  = "SAVINGS_PLANS_UTILIZATION"
+      limit_amount = "100.0"
+      limit_unit   = "PERCENTAGE"
+      time_unit    = "MONTHLY"
+
+      notification = {
+        comparison_operator = "LESS_THAN"
+        threshold           = "100"
+        threshold_type      = "PERCENTAGE"
+        notification_type   = "ACTUAL"
+      }
+    }
+  ]
+}
+
+module "budgets" {
+  source  = "../../"
+
+  budgets = var.budgets
+  notification = {
+    email = {
+      addresses = var.notification_emails
+    }
+  }
+  tags = var.tags
+}
+```
+
+## Notifications
+
+You can configure the budgets to send to emails without any additional configuration. If you want to send to Slack or Teams, you will need to provide the webhook URL for the respective service. For example see below
+
+```hcl
+module "budgets" {
+  source  = "../../"
+
+  budgets = var.budgets
+  notification = {
+    email = {
+      addresses = var.notification_emails
+    },
+    slack = {
+      channel     = jsondecode(data.aws_secretsmanager_secret_version.slack.secret_string).channel
+      webhook_url = jsondecode(data.aws_secretsmanager_secret_version.slack.secret_string).webhook_url
+    }
+  }
+  tags = var.tags
+}
+```
+
+## Update Documentation
+
+The `terraform-docs` utility is used to generate this README. Follow the below steps to update:
+
+1. Make changes to the `.terraform-docs.yml` file
+2. Fetch the `terraform-docs` binary (https://terraform-docs.io/user-guide/installation/)
+3. Run `terraform-docs markdown table --output-file ${PWD}/README.md --output-mode inject .`
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -34,10 +123,13 @@
 | <a name="input_create_sns_topic"></a> [create\_sns\_topic](#input\_create\_sns\_topic) | A flag to determine if the SNS topic should be created | `bool` | `true` | no |
 | <a name="input_notification"></a> [notification](#input\_notification) | The configuration as to how the budget notifications should be sent | <pre>object({<br>    email = optional(object({<br>      addresses = list(string)<br>    }), null)<br>    slack = optional(object({<br>      channel     = string<br>      lambda_name = optional(string, "budget-notifications")<br>      webhook_url = string<br>    }), null)<br>    teams = optional(object({<br>      webhook_url = string<br>    }), null)<br>  })</pre> | n/a | yes |
 | <a name="input_sns_topic_name"></a> [sns\_topic\_name](#input\_sns\_topic\_name) | The name of the SNS topic to create for budget notifications | `string` | `"budget-notifications"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 
 ## Outputs
 
 No outputs.
 <!-- END_TF_DOCS -->
 
+```
+
+```

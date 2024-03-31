@@ -1,7 +1,4 @@
-#
-## Provisions the budgets in the account 
-#
-
+## Get the current account id
 data "aws_caller_identity" "current" {}
 
 locals {
@@ -16,9 +13,7 @@ locals {
   sns_topic_arn = var.create_sns_topic ? module.notifications[0].topic_arn : format("arn:aws:sns:%s::%s", local.account_id, var.sns_topic_name)
 }
 
-#
-## Provision the SNS topic for the budgets 
-#
+## Provision the SNS topic for the budgets if required
 module "notifications" {
   source  = "terraform-aws-modules/sns/aws"
   version = "v6.0.1"
@@ -48,10 +43,7 @@ module "notifications" {
   }
 }
 
-#
-## We itereate the budgets and create them 
-#
-#
+## Iterate over the budgets and provision them 
 resource "aws_budgets_budget" "this" {
   for_each = { for x in var.budgets : x.name => x }
 
