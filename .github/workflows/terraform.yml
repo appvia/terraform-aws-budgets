@@ -7,17 +7,20 @@ on:
   pull_request:
     branches:
       - main
-      - vnext
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
-  budgets-module-validation:
+  budgets-validation:
     uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
-    name: Budgets Module Validation
+    name: Budgets Validation
     with:
       working-directory: modules/budgets
 
-  team-budgets-module-validation:
+  team-budgets-validation:
     uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
-    name: Team Budgets Module Validation
+    name: Team Budgets Validation
     with:
       working-directory: modules/team-budgets
