@@ -1,8 +1,4 @@
 #
-## Provisions a team budget 
-#
-
-#
 ## For each team budget, we need to create a SNS topic, a lamfda is then used to 
 ## subscribe to the SNS topic and then send the notification to slack or teams
 #
