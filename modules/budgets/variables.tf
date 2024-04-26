@@ -1,6 +1,3 @@
-#
-## Related to the inputs to the module 
-#
 
 variable "sns_topic_name" {
   description = "The name of the SNS topic to create for budget notifications"
