@@ -65,7 +65,7 @@ resource "aws_budgets_budget" "this" {
   notification {
     comparison_operator        = each.value.notification.comparison_operator
     notification_type          = each.value.notification.notification_type
-    subscriber_email_addresses = var.notification.email != null ? var.notification.email.addresses : null
+    subscriber_email_addresses = var.notifications.email != null ? var.notifications.email.addresses : null
     subscriber_sns_topic_arns  = [module.notifications.sns_topic_arn]
     threshold                  = each.value.notification.threshold
     threshold_type             = each.value.notification.threshold_type

@@ -18,7 +18,7 @@ module "budgets" {
   source = "../../modules/budgets"
 
   budgets = var.budgets
-  notification = {
+  notifications = {
     email = {
       addresses = var.notification_emails
     }
