@@ -63,16 +63,18 @@ variable "budgets" {
   default = []
 }
 
-variable "notification" {
+variable "notifications" {
   description = "The configuration as to how the budget notifications should be sent"
   type = object({
     email = optional(object({
       addresses = list(string)
     }), null)
     slack = optional(object({
-      channel     = string
+      channel     = optional(string, null)
       lambda_name = optional(string, "budget-notifications")
-      webhook_url = string
+      secret_name = optional(string, null)
+      username    = optional(string, ":aws: AWS Budgets")
+      webhook_url = optional(string, null)
     }), null)
     teams = optional(object({
       webhook_url = string
