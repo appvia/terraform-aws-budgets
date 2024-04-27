@@ -7,6 +7,7 @@ locals {
   slack_configuration = local.enable_slack ? {
     channel     = var.notifications.slack.channel
     lambda_name = var.notifications.slack.lambda_name
+    secret_name = var.notifications.slack.secret_name
     username    = var.notifications.slack.username
     webhook_url = var.notifications.slack.webhook_url
   } : null
