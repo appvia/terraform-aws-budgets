@@ -23,7 +23,6 @@ module "budgets" {
       addresses = var.notification_emails
     }
     slack = {
-      channel     = jsondecode(data.aws_secretsmanager_secret_version.notification.secret_string).channel
       webhook_url = jsondecode(data.aws_secretsmanager_secret_version.notification.secret_string).webhook_url
     }
   }

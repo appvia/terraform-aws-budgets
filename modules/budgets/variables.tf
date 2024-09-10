@@ -70,10 +70,8 @@ variable "notifications" {
       addresses = list(string)
     }), null)
     slack = optional(object({
-      channel     = optional(string, null)
       lambda_name = optional(string, "budget-notifications")
       secret_name = optional(string, null)
-      username    = optional(string, ":aws: AWS Budgets")
       webhook_url = optional(string, null)
     }), null)
     teams = optional(object({

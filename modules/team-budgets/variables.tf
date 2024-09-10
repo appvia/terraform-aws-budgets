@@ -52,7 +52,6 @@ variable "budgets" {
         addresses = list(string)
       }), null)
       slack = optional(object({
-        channel     = string
         webhook_url = string
       }), null)
       teams = optional(object({
