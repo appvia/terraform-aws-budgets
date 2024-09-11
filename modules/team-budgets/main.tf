@@ -114,6 +114,7 @@ module "slack_notfications" {
     webhook_url = each.value.slack_notification.slack_webhook_url
     lambda_name = format("team-budgets-notifications-%s", md5(each.value.name))
   }
-  sns_topic_name = module.sns[each.key].topic_name
-  tags           = var.tags
+  sns_topic_name      = module.sns[each.key].topic_name
+  tags                = var.tags
+  accounts_id_to_name = var.accounts_id_to_name
 }
