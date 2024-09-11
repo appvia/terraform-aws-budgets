@@ -108,9 +108,11 @@ module "slack_notfications" {
   source  = "appvia/notifications/aws"
   version = "1.0.1"
 
-  create_sns_topic  = false
+  create_sns_topic = false
   slack = {
     webhook_url = each.value.slack_notification.slack_webhook_url
+    lambda_name = format("team-budgets-notifications-%s", md5(each.value.name))
   }
-  sns_topic_name    = module.sns[each.key].topic_name
+  sns_topic_name = module.sns[each.key].topic_name
+  tags           = var.tags
 }
