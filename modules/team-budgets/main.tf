@@ -106,7 +106,7 @@ module "slack_notfications" {
   for_each = { for budget in var.budgets : budget.name => budget if budget.slack_notification.slack != null }
 
   source  = "appvia/notifications/aws"
-  version = "1.0.1"
+  version = "1.0.2"
 
   create_sns_topic = false
   enable_slack     = true
