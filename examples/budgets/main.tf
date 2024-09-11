@@ -27,4 +27,7 @@ module "budgets" {
     }
   }
   tags = var.tags
+  accounts_id_to_name = {
+    "1234567890" = "mgmt"
+  }
 }
