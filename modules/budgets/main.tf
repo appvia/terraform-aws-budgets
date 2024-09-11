@@ -10,7 +10,7 @@ module "notifications" {
   ]
   create_sns_topic    = var.create_sns_topic
   sns_topic_name      = var.sns_topic_name
-  enable_slack        = var.enable_slack
+  enable_slack        = local.enable_slack
   slack               = local.slack_configuration
   tags                = var.tags
   accounts_id_to_name = var.accounts_id_to_name
