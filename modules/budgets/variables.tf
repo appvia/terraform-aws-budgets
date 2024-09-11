@@ -85,3 +85,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_slack" {
+  description = "Enable/disable the posting of notifications to slack"
+  type        = bool
+  default     = true
+}

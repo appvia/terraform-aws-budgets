@@ -109,6 +109,7 @@ module "slack_notfications" {
   version = "1.0.1"
 
   create_sns_topic = false
+  enable_slack     = var.enable_slack
   slack = {
     webhook_url = each.value.slack_notification.slack_webhook_url
     lambda_name = format("team-budgets-notifications-%s", md5(each.value.name))
