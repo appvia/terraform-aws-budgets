@@ -52,7 +52,6 @@ variable "budgets" {
         addresses = list(string)
       }), null)
       slack = optional(object({
-        channel     = string
         webhook_url = string
       }), null)
       teams = optional(object({
@@ -67,4 +66,9 @@ variable "tags" {
   description = "A map of tags to apply to the resources"
   type        = map(string)
   default     = {}
+}
+
+variable "accounts_id_to_name" {
+  description = "A mapping of account id and account name - used by notification lamdba to map an account ID to a human readable name"
+  type        = map(string)
 }

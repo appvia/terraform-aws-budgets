@@ -105,12 +105,16 @@ resource "aws_budgets_budget" "this" {
 module "slack_notfications" {
   for_each = { for budget in var.budgets : budget.name => budget if budget.slack_notification.slack != null }
 
-  source  = "terraform-aws-modules/notify-slack/aws"
-  version = "6.1.1"
+  source  = "appvia/notifications/aws"
+  version = "1.0.1"
 
-  create_sns_topic  = false
-  slack_channel     = each.value.slack_notification.slack_channel
-  slack_username    = ":aws: (#{each.key})"
-  slack_webhook_url = each.value.slack_notification.slack_webhook_url
-  sns_topic_name    = module.sns[each.key].topic_name
+  create_sns_topic = false
+  enable_slack     = true
+  slack = {
+    webhook_url = each.value.slack_notification.slack_webhook_url
+    lambda_name = format("team-budgets-notifications-%s", md5(each.value.name))
+  }
+  sns_topic_name      = module.sns[each.key].topic_name
+  tags                = var.tags
+  accounts_id_to_name = var.accounts_id_to_name
 }

@@ -2,16 +2,18 @@
 ## Provision the SNS topic for the budgets if required and notifications 
 module "notifications" {
   source  = "appvia/notifications/aws"
-  version = "0.1.4"
+  version = "1.0.1"
 
   allowed_aws_services = [
     "budgets.amazonaws.com",
     "lambda.amazonaws.com",
   ]
-  create_sns_topic = var.create_sns_topic
-  sns_topic_name   = var.sns_topic_name
-  slack            = local.slack_configuration
-  tags             = var.tags
+  create_sns_topic    = var.create_sns_topic
+  sns_topic_name      = var.sns_topic_name
+  enable_slack        = local.enable_slack
+  slack               = local.slack_configuration
+  tags                = var.tags
+  accounts_id_to_name = var.accounts_id_to_name
 }
 
 ## Iterate over the budgets and provision them 

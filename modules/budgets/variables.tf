@@ -70,10 +70,8 @@ variable "notifications" {
       addresses = list(string)
     }), null)
     slack = optional(object({
-      channel     = optional(string, null)
       lambda_name = optional(string, "budget-notifications")
       secret_name = optional(string, null)
-      username    = optional(string, ":aws: AWS Budgets")
       webhook_url = optional(string, null)
     }), null)
     teams = optional(object({
@@ -86,4 +84,9 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
+}
+
+variable "accounts_id_to_name" {
+  description = "A mapping of account id and account name - used by notification lamdba to map an account ID to a human readable name"
+  type        = map(string)
 }

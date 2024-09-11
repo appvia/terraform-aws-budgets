@@ -13,7 +13,6 @@ run "basic_account_budget" {
         addresses = ["platform-engineering@myorg.com"]
       }
       slack = {
-        channel     = "dev-alerts"
         webhook_url = "https://my-dev-alerts.slack.com"
       }
     }

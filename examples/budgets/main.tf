@@ -23,9 +23,11 @@ module "budgets" {
       addresses = var.notification_emails
     }
     slack = {
-      channel     = jsondecode(data.aws_secretsmanager_secret_version.notification.secret_string).channel
       webhook_url = jsondecode(data.aws_secretsmanager_secret_version.notification.secret_string).webhook_url
     }
   }
   tags = var.tags
+  accounts_id_to_name = {
+    "1234567890" = "mgmt"
+  }
 }
