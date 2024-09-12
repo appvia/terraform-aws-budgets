@@ -16,7 +16,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_slack_notfications"></a> [slack\_notfications](#module\_slack\_notfications) | appvia/notifications/aws | 1.0.2 |
+| <a name="module_slack_notfications"></a> [slack\_notfications](#module\_slack\_notfications) | appvia/notifications/aws | 1.0.3 |
 | <a name="module_sns"></a> [sns](#module\_sns) | terraform-aws-modules/sns/aws | v6.0.1 |
 
 ## Resources
