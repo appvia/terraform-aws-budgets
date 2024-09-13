@@ -90,3 +90,15 @@ variable "accounts_id_to_name" {
   description = "A mapping of account id and account name - used by notification lamdba to map an account ID to a human readable name"
   type        = map(string)
 }
+
+variable "identity_center_start_url" {
+  description = "The start URL of your Identity Center instance"
+  type        = string
+  default     = null
+}
+
+variable "identity_center_role" {
+  description = "The name of the role to use when redirecting through Identity Center"
+  type        = string
+  default     = null
+}

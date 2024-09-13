@@ -106,7 +106,7 @@ module "slack_notfications" {
   for_each = { for budget in var.budgets : budget.name => budget if budget.slack_notification.slack != null }
 
   source  = "appvia/notifications/aws"
-  version = "1.0.3"
+  version = "1.0.4"
 
   create_sns_topic = false
   enable_slack     = true
@@ -114,7 +114,9 @@ module "slack_notfications" {
     webhook_url = each.value.slack_notification.slack_webhook_url
     lambda_name = format("team-budgets-notifications-%s", md5(each.value.name))
   }
-  sns_topic_name      = module.sns[each.key].topic_name
-  tags                = var.tags
-  accounts_id_to_name = var.accounts_id_to_name
+  sns_topic_name            = module.sns[each.key].topic_name
+  tags                      = var.tags
+  accounts_id_to_name       = var.accounts_id_to_name
+  identity_center_start_url = var.identity_center_start_url
+  identity_center_role      = var.identity_center_role
 }
