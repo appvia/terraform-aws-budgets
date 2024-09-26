@@ -49,6 +49,7 @@ resource "aws_budgets_budget" "this" {
   limit_unit   = "USD"
   name         = each.value.name
   time_unit    = each.value.time_unit
+  tags         = var.tags
 
   dynamic "cost_filter" {
     for_each = each.value.cost_filters

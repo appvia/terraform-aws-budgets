@@ -25,6 +25,7 @@ resource "aws_budgets_budget" "this" {
   name              = each.value.name
   budget_type       = each.value.budget_type
   limit_amount      = each.value.limit_amount
+  tags              = var.tags
   limit_unit        = lookup(each.value, "limit_unit", "USD")
   time_period_start = lookup(each.value, "time_period_start", null)
   time_period_end   = lookup(each.value, "time_period_end", null)
