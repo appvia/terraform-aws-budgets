@@ -59,6 +59,8 @@ variable "budgets" {
       include_upfront            = false
       use_blended                = false
     })
+
+    tags = optional(map(string), {})
   }))
   default = []
 }
