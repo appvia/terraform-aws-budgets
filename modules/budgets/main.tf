@@ -1,8 +1,8 @@
 
-## Provision the SNS topic for the budgets if required and notifications 
+## Provision the SNS topic for the budgets if required and notifications
 module "notifications" {
   source  = "appvia/notifications/aws"
-  version = "1.0.8"
+  version = "1.0.9"
 
   allowed_aws_services = [
     "budgets.amazonaws.com",
@@ -18,7 +18,7 @@ module "notifications" {
   identity_center_role      = var.identity_center_role
 }
 
-## Iterate over the budgets and provision them 
+## Iterate over the budgets and provision them
 resource "aws_budgets_budget" "this" {
   for_each = { for x in var.budgets : x.name => x }
 
