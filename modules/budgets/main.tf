@@ -2,7 +2,7 @@
 ## Provision the SNS topic for the budgets if required and notifications 
 module "notifications" {
   source  = "appvia/notifications/aws"
-  version = "1.0.4"
+  version = "1.0.8"
 
   allowed_aws_services = [
     "budgets.amazonaws.com",
