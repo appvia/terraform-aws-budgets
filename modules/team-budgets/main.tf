@@ -1,5 +1,5 @@
 #
-## For each team budget, we need to create a SNS topic, a lamfda is then used to 
+## For each team budget, we need to create a SNS topic, a lamfda is then used to
 ## subscribe to the SNS topic and then send the notification to slack or teams
 #
 module "sns" {
@@ -31,7 +31,7 @@ module "sns" {
   }
 }
 
-## Provision any additional notification subscriptions (email) 
+## Provision any additional notification subscriptions (email)
 resource "aws_sns_topic_subscription" "email" {
   for_each = { for x in var.budgets : x => x if x.notification.email != null }
 
@@ -40,7 +40,7 @@ resource "aws_sns_topic_subscription" "email" {
   topic_arn = module.sns[each.key].topic_arn
 }
 
-## Provisions a budgets for the products 
+## Provisions a budgets for the products
 resource "aws_budgets_budget" "this" {
   for_each = { for budget in var.budgets : budget.name => budget }
 
