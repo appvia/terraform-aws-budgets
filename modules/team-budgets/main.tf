@@ -4,7 +4,7 @@
 #
 module "sns" {
   source   = "terraform-aws-modules/sns/aws"
-  version  = "v6.0.1"
+  version  = "v6.1.2"
   for_each = { for budget in var.budgets : budget.name => budget }
 
   name = format("team-budgets-%s", md5(each.value.name))
