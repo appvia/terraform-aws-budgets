@@ -62,7 +62,7 @@ resource "aws_budgets_budget" "this" {
     for_each = each.value.cost_filter
 
     content {
-      name   = cost_filter.value.name
+      name   = cost_filter.key
       values = cost_filter.value.values
     }
   }

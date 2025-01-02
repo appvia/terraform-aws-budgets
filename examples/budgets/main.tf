@@ -4,6 +4,55 @@
 # to build your own root module that invokes this module
 #####################################################################################
 
+locals {
+  ## The region 
+  region = "eu-west-2"
+
+  ## The budgets 
+  budgets = [
+    {
+      name         = "AWS Monthly Budget for ${local.region} (Actual)"
+      budget_type  = "COST"
+      limit_amount = "100.0"
+      limit_unit   = "USD"
+      time_unit    = "MONTHLY"
+
+      notification = {
+        comparison_operator = "GREATER_THAN"
+        threshold           = "80"
+        threshold_type      = "PERCENTAGE"
+        notification_type   = "ACTUAL"
+      }
+
+      cost_filter = {
+        "Region": {
+          values = [local.region]
+        }
+      }
+    },
+    {
+      name         = "AWS Monthly Budget for ${local.region} (Forecast)"
+      budget_type  = "COST"
+      limit_amount = "100.0"
+      limit_unit   = "USD"
+      time_unit    = "MONTHLY"
+
+      notification = {
+        comparison_operator = "GREATER_THAN"
+        threshold           = "80"
+        threshold_type      = "PERCENTAGE"
+        notification_type   = "FORECASTED"
+      }
+
+      cost_filter = {
+        "Region": { 
+          values = [local.region]
+        }
+      }
+    },
+  ]
+}
+
 ## Read the secret for aws secrets manager 
 data "aws_secretsmanager_secret" "notification" {
   name = var.notification_secret_name
@@ -17,7 +66,7 @@ data "aws_secretsmanager_secret_version" "notification" {
 module "budgets" {
   source = "../../modules/budgets"
 
-  budgets = var.budgets
+  budgets = local.budgets
   notifications = {
     email = {
       addresses = var.notification_emails
