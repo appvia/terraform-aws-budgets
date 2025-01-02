@@ -1,7 +1,7 @@
 mock_provider "aws" {
   mock_data "aws_region" {
     defaults = {
-      name = "us-west-2"       
+      name           = "us-west-2"
       current_region = "us-west-2"
     }
   }
@@ -53,7 +53,11 @@ run "basic_account_budget" {
         }
       },
     ]
+    tags = {
+      Environment = "Test"
+    }
   }
+
 
   assert {
     condition     = length(var.budgets.0.name) >= 1 && length(var.budgets.0.name) < 100

@@ -8,14 +8,11 @@ module "notifications" {
     "budgets.amazonaws.com",
     "lambda.amazonaws.com",
   ]
-  create_sns_topic          = var.create_sns_topic
-  sns_topic_name            = var.sns_topic_name
-  enable_slack              = local.enable_slack
-  slack                     = local.slack_configuration
-  tags                      = var.tags
-  accounts_id_to_name       = var.accounts_id_to_name
-  identity_center_start_url = var.identity_center_start_url
-  identity_center_role      = var.identity_center_role
+  create_sns_topic = var.create_sns_topic
+  sns_topic_name   = var.sns_topic_name
+  enable_slack     = local.enable_slack
+  slack            = local.slack_configuration
+  tags             = var.tags
 }
 
 ## Iterate over the budgets and provision them
@@ -78,3 +75,4 @@ resource "aws_budgets_budget" "this" {
 
   depends_on = [module.notifications]
 }
+

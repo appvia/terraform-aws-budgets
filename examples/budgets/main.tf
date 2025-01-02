@@ -5,10 +5,10 @@
 #####################################################################################
 
 locals {
-  ## The region 
+  ## The region
   region = "eu-west-2"
 
-  ## The budgets 
+  ## The budgets
   budgets = [
     {
       name         = "AWS Monthly Budget for ${local.region} (Actual)"
@@ -25,7 +25,7 @@ locals {
       }
 
       cost_filter = {
-        "Region": {
+        "Region" : {
           values = [local.region]
         }
       }
@@ -45,7 +45,7 @@ locals {
       }
 
       cost_filter = {
-        "Region": { 
+        "Region" : {
           values = [local.region]
         }
       }
@@ -53,7 +53,7 @@ locals {
   ]
 }
 
-## Read the secret for aws secrets manager 
+## Read the secret for aws secrets manager
 data "aws_secretsmanager_secret" "notification" {
   name = var.notification_secret_name
 }
@@ -76,7 +76,4 @@ module "budgets" {
     }
   }
   tags = var.tags
-  accounts_id_to_name = {
-    "1234567890" = "mgmt"
-  }
 }
