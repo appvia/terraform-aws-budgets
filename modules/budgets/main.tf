@@ -75,7 +75,7 @@ resource "aws_budgets_budget" "this" {
 
   # depends_on = [module.notifications]
   lifecycle {
-    ignore_changes = [notification[*].subscriber_sns_topic_arns]
+    ignore_changes = [notification]
   }
 }
 
