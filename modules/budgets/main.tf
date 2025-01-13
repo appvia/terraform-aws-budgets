@@ -73,7 +73,6 @@ resource "aws_budgets_budget" "this" {
     threshold_type             = each.value.notification.threshold_type
   }
 
-  # depends_on = [module.notifications]
   lifecycle {
     ignore_changes = [notification]
   }
