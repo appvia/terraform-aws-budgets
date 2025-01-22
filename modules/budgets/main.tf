@@ -2,7 +2,7 @@
 ## Provision the SNS topic for the budgets if required and notifications
 module "notifications" {
   source  = "appvia/notifications/aws"
-  version = "1.1.0"
+  version = "2.0.0"
 
   allowed_aws_services = [
     "budgets.amazonaws.com",
@@ -73,6 +73,8 @@ resource "aws_budgets_budget" "this" {
     threshold_type             = each.value.notification.threshold_type
   }
 
-  depends_on = [module.notifications]
+  lifecycle {
+    ignore_changes = [notification]
+  }
 }
 
