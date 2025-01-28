@@ -1,20 +1,4 @@
 
-## Provision the SNS topic for the budgets if required and notifications
-module "notifications" {
-  source  = "appvia/notifications/aws"
-  version = "2.0.1"
-
-  allowed_aws_services = [
-    "budgets.amazonaws.com",
-    "lambda.amazonaws.com",
-  ]
-  create_sns_topic = var.create_sns_topic
-  sns_topic_name   = var.sns_topic_name
-  enable_slack     = local.enable_slack
-  slack            = local.slack_configuration
-  tags             = var.tags
-}
-
 ## Iterate over the budgets and provision them
 resource "aws_budgets_budget" "this" {
   for_each = { for x in var.budgets : x.name => x }
@@ -68,7 +52,7 @@ resource "aws_budgets_budget" "this" {
     comparison_operator        = each.value.notification.comparison_operator
     notification_type          = each.value.notification.notification_type
     subscriber_email_addresses = var.notifications.email != null ? var.notifications.email.addresses : null
-    subscriber_sns_topic_arns  = [module.notifications.sns_topic_arn]
+    subscriber_sns_topic_arns  = var.notifications.sns != null ? [var.notifications.sns.topic_arn] : null
     threshold                  = each.value.notification.threshold
     threshold_type             = each.value.notification.threshold_type
   }
