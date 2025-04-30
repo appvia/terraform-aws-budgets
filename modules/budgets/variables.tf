@@ -20,12 +20,12 @@ variable "budgets" {
     limit_unit   = optional(string, "PERCENTAGE")
     time_unit    = optional(string, "MONTHLY")
 
-    notification = optional(object({
+    notifications = optional(map(object({
       comparison_operator = string
+      notification_type   = string
       threshold           = number
       threshold_type      = string
-      notification_type   = string
-    }), null)
+    })), {})
 
     auto_adjust_data = optional(list(object({
       auto_adjust_type = string
