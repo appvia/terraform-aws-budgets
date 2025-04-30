@@ -1,16 +1,4 @@
 
-variable "sns_topic_name" {
-  description = "The name of the SNS topic to create for budget notifications"
-  type        = string
-  default     = "budget-notifications"
-}
-
-variable "create_sns_topic" {
-  description = "A flag to determine if the SNS topic should be created"
-  type        = bool
-  default     = true
-}
-
 variable "budgets" {
   description = "A collection of budgets to provision"
   type = list(object({
@@ -70,13 +58,8 @@ variable "notifications" {
     email = optional(object({
       addresses = list(string)
     }), null)
-    slack = optional(object({
-      lambda_name = optional(string, "budget-notifications")
-      secret_name = optional(string, null)
-      webhook_url = optional(string, null)
-    }), null)
-    teams = optional(object({
-      webhook_url = string
+    sns = optional(object({
+      topic_arn = string
     }), null)
   })
 }
