@@ -1,8 +1,8 @@
 mock_provider "aws" {
   mock_data "aws_region" {
     defaults = {
-      name           = "us-west-2"
-      current_region = "us-west-2"
+      name           = "eu-west-2"
+      current_region = "eu-west-2"
     }
   }
 
@@ -21,7 +21,7 @@ mock_provider "aws" {
   }
 }
 
-run "basic_account_budget" {
+run "budgets" {
   command = plan
 
   module {
@@ -33,8 +33,8 @@ run "basic_account_budget" {
       email = {
         addresses = ["platform-engineering@myorg.com"]
       }
-      slack = {
-        webhook_url = "https://my-dev-alerts.slack.com"
+      sns = {
+        topic_arn = "arn:aws:sns:us-west-2:123456789012:my-topic"
       }
     }
     budgets = [
@@ -45,11 +45,19 @@ run "basic_account_budget" {
         limit_unit   = "PERCENTAGE"
         time_unit    = "MONTHLY"
 
-        notification = {
-          comparison_operator = "LESS_THAN"
-          threshold           = "100"
-          threshold_type      = "PERCENTAGE"
-          notification_type   = "ACTUAL"
+        notifications = {
+          actual = {
+            comparison_operator = "LESS_THAN"
+            threshold           = "100"
+            threshold_type      = "PERCENTAGE"
+            notification_type   = "ACTUAL"
+          }
+          forecasted = {
+            comparison_operator = "LESS_THAN"
+            threshold           = "100"
+            threshold_type      = "PERCENTAGE"
+            notification_type   = "FORECASTED"
+          }
         }
       },
     ]
@@ -73,12 +81,90 @@ run "basic_account_budget" {
     condition     = contains(["DAILY", "MONTHLY", "QUARTERLY", "ANNUALLY"], var.budgets.0.time_unit)
     error_message = "Not a valid budge time unit"
   }
-}
 
-run "basic_team_budget" {
-  command = plan
+  ## Should create a budget for each budget in the budgets array
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"] != null
+    error_message = "Budget should be created"
+  }
 
-  module {
-    source = "./modules/team-budgets"
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].name == "AWS Savings Plan Coverage Budget"
+    error_message = "Budget name should be AWS Savings Plan Coverage Budget"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].budget_type == "SAVINGS_PLANS_COVERAGE"
+    error_message = "Budget type should be SAVINGS_PLANS_COVERAGE"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].limit_amount == "100.0"
+    error_message = "Budget limit amount should be 100.0"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].limit_unit == "PERCENTAGE"
+    error_message = "Budget limit unit should be PERCENTAGE"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].time_unit == "MONTHLY"
+    error_message = "Budget time unit should be MONTHLY"
+  }
+
+  assert {
+    condition     = length(aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].notification) == 2
+    error_message = "Budget notifications should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_credit == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_discount == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_recurring == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_refund == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_subscription == true
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_support == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_tax == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_upfront == false
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.use_amortized == null
+    error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.use_blended == false
+    error_message = "Budget cost types should be correct"
   }
 }
