@@ -1,28 +1,13 @@
-
 variable "budgets" {
   description = "A collection of budgets to provision"
   type = list(object({
-    name         = string
-    budget_type  = optional(string, "COST")
-    limit_amount = optional(string, "100.0")
-    limit_unit   = optional(string, "PERCENTAGE")
-    time_unit    = optional(string, "MONTHLY")
-
-    notifications = optional(map(object({
-      comparison_operator = string
-      notification_type   = string
-      threshold           = number
-      threshold_type      = string
-    })), {})
-
     auto_adjust_data = optional(list(object({
       auto_adjust_type = string
     })), [])
-
+    budget_type = optional(string, "COST")
     cost_filter = optional(map(object({
       values = list(string)
     })), {})
-
     cost_types = optional(object({
       include_credit             = optional(bool, false)
       include_discount           = optional(bool, false)
@@ -46,8 +31,17 @@ variable "budgets" {
       include_upfront            = false
       use_blended                = false
     })
-
-    tags = optional(map(string), {})
+    limit_amount = optional(string, "100.0")
+    limit_unit   = optional(string, "PERCENTAGE")
+    name         = string
+    notifications = optional(map(object({
+      comparison_operator = string
+      notification_type   = string
+      threshold           = number
+      threshold_type      = string
+    })), {})
+    tags      = optional(map(string), {})
+    time_unit = optional(string, "MONTHLY")
   }))
   default = []
 }
@@ -55,13 +49,30 @@ variable "budgets" {
 variable "notifications" {
   description = "The configuration as to how the budget notifications should be sent"
   type = object({
+    # Configuration for the email notifications. If null, email notifications will not be sent.
     email = optional(object({
+      # List of email addresses to send the notifications to.
       addresses = list(string)
     }), null)
+    # COnfiguration for the SNS notifications. If null, SNS notifications will not be sent.
     sns = optional(object({
-      topic_arn = string
+      # The ARN for the queue to send the notifications to.
+      topic_arn = optional(string, null)
+      # The name of a SNS topic to send the notifications to.
+      topic_name = optional(string, null)
     }), null)
   })
+
+  validation {
+    condition = (
+      var.notifications.sns == null ||
+      !(
+        try(var.notifications.sns.topic_arn, null) != null &&
+        try(var.notifications.sns.topic_name, null) != null
+      )
+    )
+    error_message = "Only one of notifications.sns.topic_arn or notifications.sns.topic_name can be set."
+  }
 }
 
 variable "tags" {

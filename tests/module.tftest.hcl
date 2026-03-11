@@ -2,6 +2,7 @@ mock_provider "aws" {
   mock_data "aws_region" {
     defaults = {
       name           = "eu-west-2"
+      region         = "eu-west-2"
       current_region = "eu-west-2"
     }
   }
@@ -25,7 +26,7 @@ run "budgets" {
   command = plan
 
   module {
-    source = "./modules/budgets"
+    source = "./"
   }
 
   variables {
@@ -34,7 +35,7 @@ run "budgets" {
         addresses = ["platform-engineering@myorg.com"]
       }
       sns = {
-        topic_arn = "arn:aws:sns:us-west-2:123456789012:my-topic"
+        topic_name = "my-topic"
       }
     }
     budgets = [
@@ -119,6 +120,11 @@ run "budgets" {
   }
 
   assert {
+    condition     = alltrue([for notification in aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].notification : contains(notification.subscriber_sns_topic_arns, "arn:aws:sns:eu-west-2:123456789012:my-topic")])
+    error_message = "Budget notifications should use computed SNS topic ARN from topic_name"
+  }
+
+  assert {
     condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.include_credit == false
     error_message = "Budget cost types should be correct"
   }
@@ -166,5 +172,20 @@ run "budgets" {
   assert {
     condition     = aws_budgets_budget.this["AWS Savings Plan Coverage Budget"].cost_types.0.use_blended == false
     error_message = "Budget cost types should be correct"
+  }
+
+  assert {
+    condition     = contains(keys(output.budget_arns), "AWS Savings Plan Coverage Budget")
+    error_message = "budget_arns output should include the budget key"
+  }
+
+  assert {
+    condition     = contains(keys(output.budget_ids), "AWS Savings Plan Coverage Budget")
+    error_message = "budget_ids output should include the budget key"
+  }
+
+  assert {
+    condition     = contains(output.budget_names, "AWS Savings Plan Coverage Budget")
+    error_message = "budget_names output should include the budget name"
   }
 }

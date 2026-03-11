@@ -1,15 +1,13 @@
-
-## Iterate over the budgets and provision them
 resource "aws_budgets_budget" "this" {
   for_each = { for x in var.budgets : x.name => x }
 
   name              = each.value.name
   budget_type       = each.value.budget_type
   limit_amount      = each.value.limit_amount
-  tags              = merge(var.tags, try(each.value.tags, {}))
   limit_unit        = lookup(each.value, "limit_unit", "USD")
-  time_period_start = lookup(each.value, "time_period_start", null)
+  tags              = merge(var.tags, try(each.value.tags, {}))
   time_period_end   = lookup(each.value, "time_period_end", null)
+  time_period_start = lookup(each.value, "time_period_start", null)
   time_unit         = lookup(each.value, "time_unit", "MONTHLY")
 
   dynamic "auto_adjust_data" {
@@ -55,10 +53,9 @@ resource "aws_budgets_budget" "this" {
       comparison_operator        = notification.value.comparison_operator
       notification_type          = notification.value.notification_type
       subscriber_email_addresses = var.notifications.email != null ? var.notifications.email.addresses : null
-      subscriber_sns_topic_arns  = var.notifications.sns != null ? [var.notifications.sns.topic_arn] : null
+      subscriber_sns_topic_arns  = local.notifications_sns_topic_arn != null ? [local.notifications_sns_topic_arn] : null
       threshold                  = notification.value.threshold
       threshold_type             = notification.value.threshold_type
     }
   }
 }
-
