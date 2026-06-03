@@ -13,14 +13,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  budgets-validation:
+  validation:
     uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
-    name: Budgets Validation
+    name: Terraform Validation
     with:
-      working-directory: modules/budgets
-
-  team-budgets-validation:
-    uses: appvia/appvia-cicd-workflows/.github/workflows/terraform-module-validation.yml@main
-    name: Team Budgets Validation
-    with:
-      working-directory: modules/team-budgets
+      working-directory: .
